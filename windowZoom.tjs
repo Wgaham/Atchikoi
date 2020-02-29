@@ -1,0 +1,124 @@
+/*
+	「画面」メニューに、ウィンドウ拡大縮小のメニューを追加するプラグイン
+	* @ todo: 修改显示菜单到zoomMenu - by jim9@kdays
+*/
+
+class WindowZoomPlugin extends KAGPlugin{
+	var onWindowedMenuItemClick_org;
+	var onFullScreenMenuItemClick_org;
+
+	var zoom100item;
+
+	function WindowZoomPlugin(window){
+		super.KAGPlugin();
+		this.window = window;
+
+		var usefulZoom = [
+			[512, 384],
+			[640, 480],
+			[720, 540],
+			[800, 600],
+			[960, 720],
+			[1280, 720]
+		];
+		for(var i = 0; i < usefulZoom.count; i++){
+			var nowObj = usefulZoom[i];
+			var caption = nowObj[0] + " x " + nowObj[1];
+			
+			var item = new KAGMenuItem(kag, caption, 2, onZoomMenuItemClick, false);
+			item.sH = nowObj[1];
+			item.sW = nowObj[0];
+			item.stopRecur = true;
+			
+			kag.zoomMenu.add(item);
+			if(nowObj[0] == 800)zoom100item = item;
+		}
+		zoom100item.checked = true;
+
+		onWindowedMenuItemClick_org = kag.onWindowedMenuItemClick;
+		onFullScreenMenuItemClick_org = kag.onFullScreenMenuItemClick;
+		kag.onWindowedMenuItemClick = kag.windowedMenuItem.command =
+		onWindowedMenuItemClick_new incontextof kag;
+		kag.onFullScreenMenuItemClick = kag.fullScreenMenuItem.command =
+		onFullScreenMenuItemClick_new incontextof kag;
+		
+		if(kag.fullScreen)	enableZoomMenuItems(false);
+	}
+
+	function finalize(){
+		super.finalize(...);
+	}
+
+	function trySetZoom(width, height){
+		var orgw = kag.innerWidth;
+		var orgh = kag.innerHeight;
+		var w = (int)width;
+		var h = (int)height;
+		Debug.message(@"屏幕尺寸 &w;x&h; 设定...");
+		kag.setInnerSize(w, h);
+		if(kag.innerWidth != w || kag.innerHeight != h){
+			Debug.message("可能超出本身屏幕大小");
+			kag.setInnerSize(orgw, orgh);
+			return false;
+		}
+		
+		kag.setZoom(w, 800);
+		return true;
+	}
+
+	function onZoomMenuItemClick(item){
+		if(trySetZoom(item.sW, item.sH))	item.checked = true;
+	}
+
+	function setZoomFromMenu(){
+		var items = kag.zoomMenu.children;
+		for(var i = 0; i < items.count; i++){
+			if(typeof items[i].sW != "undefined" && items[i].checked){
+				var item = items[i];
+				if(!trySetZoom(item.sW, item.sH)){
+					item = zoom100item;
+					if(trySetZoom(item.sW, item.sH))
+					item.checked = true;
+				}
+				
+				break;
+			}
+		}
+	}
+
+	function onWindowedMenuItemClick_new(){
+		if(!kag.fullScreened) return;
+		with(global.windowzoom_object){
+			.onWindowedMenuItemClick_org(...);
+			.enableZoomMenuItems(true);
+			.setZoomFromMenu();
+		}
+	}
+
+	function onFullScreenMenuItemClick_new(){
+		if(kag.fullScreened) return;
+		with(global.windowzoom_object){
+			.trySetZoom(800, 600);
+			.enableZoomMenuItems(false);
+			.onFullScreenMenuItemClick_org(...);
+		}
+	}
+
+	function enableZoomMenuItems(b){
+		var items = kag.displayMenu.children;
+		for(var i = 0; i < items.count; i++){
+			if(typeof items[i].numer != "undefined"){
+				items[i].enabled = b;
+			}
+		}
+	}
+	
+	function onStore(f, elm){}
+	function onRestore(f, clear, elm){}
+	function onStableStateChanged(stable){}
+	function onMessageHiddenStateChanged(hidden){}
+	function onCopyLayer(toback){}
+	function onExchangeForeBack(){}
+}
+
+kag.addPlugin(global.windowzoom_object = new WindowZoomPlugin(kag));
