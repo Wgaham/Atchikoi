@@ -1,15 +1,15 @@
 import os
 
-url = input("请拖入带@的翻译好的替换文件:")
+url = input("请拖入翻译好的文本:")
+ks_url = input("请拖入原始剧本:")
 
 # 请按照原始剧本.ks的编码修改下一行的编码，例如UTF-16LE格式为"utf-16le"，请带上半角双引号
 encode_ks = "utf-16le"
 
 
-original_url = url.split('@')[0]+".ks"
-test_url = url.split('@')[0]+".txt"
+test_url = ks_url.split('.')[0]+".txt"
 
-with open(original_url, 'r', encoding=encode_ks) as original_reader:
+with open(ks_url, 'r', encoding=encode_ks) as original_reader:
     original_list = original_reader.readlines()
 
 with open(url, 'r', encoding="utf-8") as reader:
@@ -24,5 +24,5 @@ with open(url, 'r', encoding="utf-8") as reader:
 
 with open(test_url, 'w', encoding=encode_ks)as original_writer:
     original_writer.writelines(original_list)
-os.remove(original_url)
-os.rename(test_url, original_url)
+os.remove(ks_url)
+os.rename(test_url, ks_url)
