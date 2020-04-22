@@ -8,7 +8,7 @@
 <http://www.hgamecn.com/htmldata/article/987.html>  
 <http://www.getchu.com/soft.phtml?id=683463>
 
-* staff
+staff
 * 策划：Moses Mo
 * 翻译：Wgaham
 * 校对：Wgaham
