@@ -10,6 +10,9 @@ str_startwith = "["
 
 extract_url = path.dirname(url)+"\\text\\" + \
     path.basename(url).split('.')[0]+".txt"
+if path.exists(extract_url):
+    print("检测到已经提取出的文本，防止误覆盖不做操作，请手动确认")
+    exit(-1)
 
 with open(url, 'r', encoding=encode_ks) as reader, open(extract_url, 'w', encoding='utf-8') as writer:
     for(count, line) in enumerate(reader):

@@ -5,13 +5,14 @@
 【萌樱汉化组】
 
 游戏介绍：
-<http://www.hgamecn.com/htmldata/article/987.html>  
-<http://www.getchu.com/soft.phtml?id=683463>
+<https://www.2dfan.com/subjects/972>  
 
 staff
+
 * 策划：Moses Mo
 * 翻译：Wgaham
 * 校对：Wgaham
-* 润色：Wgaham
-* 程序：坑娘 Wgaham（KRKR加强/修改） Azure（KRKR EXE）
+* 润色：miracleXL Wgaham
+* 程序：坑娘 Wgaham Azure
 * 美工：Hazx
+* 歌词协力：北大路可怜后援团
